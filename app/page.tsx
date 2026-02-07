@@ -20,6 +20,32 @@ export default function SuperBowlSquares({
 
   const isAdmin = searchParams.admin === '2791';
 
+  const getWinningSquareId = (patsScore: number | null, hawksScore: number | null) => {
+    // If scores aren't entered OR settings hasn't loaded arrays yet, bail out
+  if (patsScore === null || hawksScore === null || !settings?.away_numbers || !settings?.home_numbers) {
+    return null;
+  }
+    
+    const patsDigit = patsScore % 10;
+    const hawksDigit = hawksScore % 10;
+  
+    // Find which index in the randomized arrays matches these digits
+    const colIndex = settings.away_numbers.indexOf(patsDigit);
+    const rowIndex = settings.home_numbers.indexOf(hawksDigit);
+  
+    if (colIndex === -1 || rowIndex === -1) return null;
+    return rowIndex * 10 + colIndex;
+  };
+  
+// Calculate all winners - only if settings is loaded
+const winners = settings ? {
+  q1: getWinningSquareId(settings.q1_pats, settings.q1_hawks),
+  q2: getWinningSquareId(settings.q2_pats, settings.q2_hawks),
+  q3: getWinningSquareId(settings.q3_pats, settings.q3_hawks),
+  final: getWinningSquareId(settings.final_pats, settings.final_hawks),
+} : { q1: null, q2: null, q3: null, final: null };
+
+const winningIds = Object.values(winners).filter(id => id !== null);
   useEffect(() => {
     fetchData();
     const channel = supabase
@@ -88,14 +114,15 @@ export default function SuperBowlSquares({
           <h1 className="text-5xl font-black uppercase italic tracking-tighter text-slate-900 drop-shadow-sm">
             Super Bowl LX <span className="text-blue-600">Squares</span>
           </h1>
+          <div><span className="text-lg font-bold text-slate-400>">$1/square - Venmo @Todd-McGregor</span></div>
           <div className="mt-4 flex flex-col md:flex-row justify-center items-center gap-2 md:gap-8">
             <div className="flex items-center gap-2">
-              <span className="text-s font-bold text-slate-400 uppercase tracking-widest">Columns ⇄</span>
+              <span className="text-s font-bold text-slate-400 uppercase tracking-widest">Columns ⇅</span>
               <span className="bg-slate-900 text-white px-3 py-1 rounded text-sm font-black uppercase tracking-tighter italic">Pats</span>
             </div>
             <div className="hidden md:block text-slate-300 font-black">X</div>
             <div className="flex items-center gap-2">
-              <span className="text-s font-bold text-slate-400 uppercase tracking-widest">Rows ⇅</span>
+              <span className="text-s font-bold text-slate-400 uppercase tracking-widest">Rows ⇄</span>
               <span className="bg-slate-900 text-white px-3 py-1 rounded text-sm font-black uppercase tracking-tighter italic">'Hawks</span>
             </div>
           </div>
@@ -131,19 +158,25 @@ export default function SuperBowlSquares({
                 </div>
                 
                 {/* Playable Squares */}
-                {squares.slice(rowIndex * 10, rowIndex * 10 + 10).map((square) => (
-                  <button
-                    key={square.id}
-                    disabled={!!square.owner_name}
-                    onClick={() => claimSquare(square.id)}
-                    className={`aspect-square border border-slate-100 text-[10px] sm:text-xs leading-tight font-black transition-all overflow-hidden p-1 flex items-center justify-center
-                      ${square.owner_name 
-                        ? 'bg-blue-600 text-white shadow-inner' 
-                        : 'bg-white hover:bg-yellow-400 active:scale-90 active:bg-yellow-500'}`}
-                  >
-                    {square.owner_name?.toUpperCase() || ''}
-                  </button>
-                ))}
+                {squares.slice(rowIndex * 10, rowIndex * 10 + 10).map((square) => {
+  const isWinner = winningIds.includes(square.id);
+  
+  return (
+    <button
+      key={square.id}
+      disabled={!!square.owner_name}
+      onClick={() => claimSquare(square.id)}
+      className={`aspect-square border border-slate-100 text-[10px] sm:text-xs leading-tight font-black transition-all overflow-hidden p-1 flex items-center justify-center
+        ${isWinner 
+          ? 'bg-yellow-400 text-slate-900 ring-4 ring-yellow-200 z-20 scale-110 shadow-lg' 
+          : square.owner_name 
+            ? 'bg-blue-600 text-white shadow-inner' 
+            : 'bg-white hover:bg-yellow-400 active:scale-90 active:bg-yellow-500'}`}
+    >
+      {isWinner ? `🏆 ${square.owner_name}` : (square.owner_name?.toUpperCase() || '')}
+    </button>
+  );
+})}
               </React.Fragment>
             ))}
           </div>
