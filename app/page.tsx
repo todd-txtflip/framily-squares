@@ -197,6 +197,26 @@ const winningIds = Object.values(winners).filter(id => id !== null);
                 <span className="text-red-600 font-black uppercase italic">Wipe Board (Reset)</span>
               </button>
             </div>
+            {/* Score Entry Form */}
+<div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+  {['q1', 'q2', 'q3', 'final'].map((period) => (
+    <div key={period} className="flex flex-col gap-2">
+      <label className="text-[10px] font-black uppercase text-slate-400">{period} Score</label>
+      <div className="flex gap-1">
+        <input 
+          placeholder="Pats"
+          className="w-full p-2 border rounded text-xs font-bold"
+          onBlur={(e) => supabase.from('settings').update({ [`${period}_pats`]: parseInt(e.target.value) }).eq('id', 1).then(fetchData)}
+        />
+        <input 
+          placeholder="Hawks"
+          className="w-full p-2 border rounded text-xs font-bold"
+          onBlur={(e) => supabase.from('settings').update({ [`${period}_hawks`]: parseInt(e.target.value) }).eq('id', 1).then(fetchData)}
+        />
+      </div>
+    </div>
+  ))}
+</div>
           </div>
         )}
       </div>
