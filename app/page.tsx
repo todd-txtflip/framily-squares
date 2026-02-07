@@ -90,12 +90,12 @@ export default function SuperBowlSquares({
           </h1>
           <div className="mt-4 flex flex-col md:flex-row justify-center items-center gap-2 md:gap-8">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Columns ⇄</span>
+              <span className="text-s font-bold text-slate-400 uppercase tracking-widest">Columns ⇄</span>
               <span className="bg-slate-900 text-white px-3 py-1 rounded text-sm font-black uppercase tracking-tighter italic">Pats</span>
             </div>
             <div className="hidden md:block text-slate-300 font-black">X</div>
             <div className="flex items-center gap-2">
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">Rows ⇅</span>
+              <span className="text-s font-bold text-slate-400 uppercase tracking-widest">Rows ⇅</span>
               <span className="bg-slate-900 text-white px-3 py-1 rounded text-sm font-black uppercase tracking-tighter italic">'Hawks</span>
             </div>
           </div>
