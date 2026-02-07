@@ -114,7 +114,9 @@ const winningIds = Object.values(winners).filter(id => id !== null);
           <h1 className="text-5xl font-black uppercase italic tracking-tighter text-slate-900 drop-shadow-sm">
             Super Bowl LX <span className="text-blue-600">Squares</span>
           </h1>
-          <div><span className="text-lg font-bold text-slate-400>">$1/square - Venmo @Todd-McGregor</span></div>
+          <div><span className="text-lg font-bold text-slate-400>">$1/square - Venmo @Todd-McGregor</span>
+          <p className="text-lg font-bold text-slate-400>">Payouts: Q1 $15, Q2 $20, Q3 $15, FINAL $50</p>
+          </div>
           <div className="mt-4 flex flex-col md:flex-row justify-center items-center gap-2 md:gap-8">
             <div className="flex items-center gap-2">
               <span className="text-s font-bold text-slate-400 uppercase tracking-widest">Columns ⇅</span>
